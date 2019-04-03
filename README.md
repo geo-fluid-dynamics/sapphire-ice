@@ -14,7 +14,7 @@ As a benchmark, we simulated [Kowalewski and Rebow's water freezing experiment](
 
 ## Setup
 
-First, set up [Sapphire](https://github.com/geo-fluid-dynamics/sapphire).
+First, [set up Sapphire](https://github.com/geo-fluid-dynamics/sapphire). Then...
 
 Download with 
 
