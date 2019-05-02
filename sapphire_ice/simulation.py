@@ -66,7 +66,7 @@ class Simulation(sapphire.simulations.convection_coupled_phasechange.Simulation)
             time_stencil_size = 2,
             output_directory_path = "output/"):
         
-        self.reference_temperature_range__degC = fe.Constant(10.)
+        self.reference_temperature_range__degC = fe.Constant(1.)
         
         super().__init__(
             variational_form_residual = variational_form_residual,
@@ -77,9 +77,7 @@ class Simulation(sapphire.simulations.convection_coupled_phasechange.Simulation)
             element_degree = element_degree,
             time_stencil_size = time_stencil_size,
             output_directory_path = output_directory_path)
-        
-        self.stefan_number = self.stefan_number.assign(0.125)
-        
+            
         self.liquidus_temperature = self.liquidus_temperature.assign(0.)
         
         self.density_solid_to_liquid_ratio = \

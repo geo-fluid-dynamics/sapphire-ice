@@ -51,7 +51,9 @@ def initial_values(sim):
     Ra = 2.518084e6
 
     Pr = 6.99
-
+    
+    sim.reference_temperature_range__degC.assign(10.)
+    
     sim.grashof_number = sim.grashof_number.assign(Ra/Pr)
     
     sim.prandtl_number = sim.prandtl_number.assign(Pr)
@@ -133,17 +135,6 @@ class WaterFreezingInCavitySimulation(
             **kwargs)
         
         self.stefan_number = self.stefan_number.assign(0.125)
-        
-        self.liquidus_temperature = self.liquidus_temperature.assign(0.)
-        
-        self.density_solid_to_liquid_ratio = \
-            self.density_solid_to_liquid_ratio.assign(916.70/999.84)
-        
-        self.heat_capacity_solid_to_liquid_ratio = \
-            self.heat_capacity_solid_to_liquid_ratio.assign(0.500)
-        
-        self.thermal_conductivity_solid_to_liquid_ratio = \
-            self.thermal_conductivity_solid_to_liquid_ratio.assign(2.14/0.561)
         
         self.cold_wall_temperature = self.cold_wall_temperature.assign(-1.)
         
