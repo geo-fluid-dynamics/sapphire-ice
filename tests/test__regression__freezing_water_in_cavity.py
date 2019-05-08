@@ -36,10 +36,8 @@ def dirichlet_boundary_conditions(sim):
 
     W = sim.function_space
     
-    dim = sim.mesh.geometric_dimension()
-    
     return [fe.DirichletBC(
-        W.sub(1), (0.,)*dim, "on_boundary"),
+        W.sub(1), (0., 0.), "on_boundary"),
         fe.DirichletBC(W.sub(2), sim.hot_wall_temperature, 1),
         fe.DirichletBC(W.sub(2), sim.cold_wall_temperature, 2)]
         
@@ -58,21 +56,21 @@ def initial_values(sim):
     
     sim.prandtl_number = sim.prandtl_number.assign(Pr)
     
-    dim = sim.mesh.geometric_dimension()
+    w = fe.Function(sim.function_space)
     
-    T_c = sim.cold_wall_temperature.__float__()
+    p, u, T = w.split()
     
-    w = fe.interpolate(
-        fe.Expression(
-            (0.,) + (0.,)*dim + (T_c,),
-            element = sim.element),
-        sim.function_space)
+    p.assign(0.)
+    
+    ihat, jhat = sim.unit_vectors()
+    
+    u.assign(0.*ihat + 0.*jhat)
+    
+    T.assign(sim.cold_wall_temperature)
     
     F = heat_driven_cavity_variational_form_residual(
         sim = sim,
         solution = w)*fe.dx(degree = sim.quadrature_degree)
-        
-    T_h = sim.hot_wall_temperature.__float__()
     
     problem = fe.NonlinearVariationalProblem(
         F = F,
@@ -84,7 +82,7 @@ def initial_values(sim):
         problem = problem,
         solver_parameters = {
                 "snes_type": "newtonls",
-                "snes_monitor": True,
+                "snes_monitor": None,
                 "ksp_type": "preonly", 
                 "pc_type": "lu", 
                 "mat_type": "aij",
@@ -111,7 +109,7 @@ def initial_values(sim):
 class WaterFreezingInCavitySimulation(
         sapphire_ice.simulation.Simulation):
 
-    def __init__(self, *args, spatial_dimensions, meshsize, **kwargs):
+    def __init__(self, *args, meshsize, **kwargs):
         
         self.reference_temperature_range__degC = fe.Constant(10.)
         
@@ -119,17 +117,9 @@ class WaterFreezingInCavitySimulation(
         
         self.cold_wall_temperature = fe.Constant(0.)
         
-        if spatial_dimensions == 2:
-    
-            Mesh = fe.UnitSquareMesh
-            
-        elif spatial_dimensions == 3:
-        
-            Mesh = fe.UnitCubeMesh
-        
         super().__init__(
             *args,
-            mesh = Mesh(*(meshsize,)*spatial_dimensions),
+            mesh = fe.UnitSquareMesh(meshsize, meshsize),
             initial_values = initial_values,
             dirichlet_boundary_conditions = dirichlet_boundary_conditions,
             **kwargs)
@@ -140,7 +130,7 @@ class WaterFreezingInCavitySimulation(
         
     
     
-def freeze_water(endtime, s, tau, rx, nx, rt, nt, q, dim = 2, outdir = ""):
+def freeze_water(endtime, s, tau, rx, nx, rt, nt, q, outdir = ""):
     
     mu_l__SI = 8.90e-4  # [Pa s]
     
@@ -164,11 +154,9 @@ def freeze_water(endtime, s, tau, rx, nx, rt, nt, q, dim = 2, outdir = ""):
         quadrature_degree = q,
         element_degree = rx - 1,
         time_stencil_size = rt + 1,
-        spatial_dimensions = dim,
         meshsize = nx,
         output_directory_path = str(outdir.join(
             "freeze_water/"
-            + "dim{0}/".format(dim)
             + "s{0}_tau{1}/".format(s, tau)
             + "rx{0}_nx{1}_rt{2}_nt{3}/".format(rx, nx, rt, nt)
             + "q{0}/".format(q))))
