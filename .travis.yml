@@ -1,0 +1,15 @@
+services:
+  - docker
+
+branches:
+    only:
+        - master
+  
+notifications:
+  email: false
+
+before_install:
+- docker pull firedrakeproject/firedrake
+
+script:
+- docker run --rm -P -v `pwd`:/home/firedrake/shared -w /home/firedrake/shared firedrakeproject/firedrake ". ~/firedrake/bin/activate && cd shared/sapphire-ice && python3 setup.py install && python3 -m pytest -v ." 
