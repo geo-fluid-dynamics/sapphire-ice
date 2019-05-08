@@ -12,4 +12,8 @@ before_install:
 - docker pull firedrakeproject/firedrake
 
 script:
-- docker run --rm -P -v `pwd`:/home/firedrake/sapphire-ice -w /home/firedrake/sapphire-ice  firedrakeproject/firedrake "ls && . firedrake/bin/activate && python3 setup.py install && python3 -m pytest -v ." 
+- docker run -dti -P -v `pwd`:/home/firedrake/sapphire-ice -w /home/firedrake/ --name firedrake firedrakeproject/firedrake "ls"
+- docker exec firedrake "ls"
+- docker exec "git clone https://github.com/geo-fluid-dynamics/sapphire.git"
+- docker exec ". firedrake/bin/activate && cd sapphire && python3 setup.py install"
+- docker exec ". firedrake/bin/activate && python3 -m pytest -v sapphire-ice"
