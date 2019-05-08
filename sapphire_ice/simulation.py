@@ -88,7 +88,22 @@ class Simulation(sapphire.simulations.convection_coupled_phasechange.Simulation)
         
         self.thermal_conductivity_solid_to_liquid_ratio = \
             self.thermal_conductivity_solid_to_liquid_ratio.assign(2.14/0.561)
-            
+        
+    def solve(self, *args, **kwargs):
+    
+        return sapphire.simulation.Simulation.solve(
+            self,
+            *args,
+            parameters = {
+                "snes_type": "newtonls",
+                "snes_max_it": 24,
+                "snes_monitor": None,
+                "ksp_type": "preonly", 
+                "pc_type": "lu", 
+                "mat_type": "aij",
+                "pc_factor_mat_solver_type": "mumps"},
+            **kwargs)
+        
     def unit_vectors(self):
     
         dim = self.mesh.geometric_dimension()
