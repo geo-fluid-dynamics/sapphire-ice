@@ -10,11 +10,11 @@ notifications:
 
 before_install:
 - docker pull firedrakeproject/firedrake
+- docker run -dti -v `pwd`:/home/firedrake/sapphire-ice -w /home/firedrake/ --name fd firedrakeproject/firedrake
+- docker exec fd ls
+- docker exec fd pip3 install pytest
+- docker exec fd git clone https://github.com/geo-fluid-dynamics/sapphire.git
+- docker exec fd bash -c "source firedrake/bin/activate && cd sapphire && python3 setup.py install"
 
 script:
-- docker run -d -v `pwd`:/home/firedrake/sapphire-ice -w /home/firedrake/ --name fd firedrakeproject/firedrake
-- docker exec -u firedrake fd "ls"
-- docker exec -u firedrake fd "git clone https://github.com/geo-fluid-dynamics/sapphire.git"
-- docker exec -u firedrake fd ". firedrake/bin/activate && cd sapphire && python3 setup.py install"
-- docker exec -u firedrake fd ". firedrake/bin/activate && cd sapphire-ice && python3 setup.py install"
-- docker exec -u firedrake fd ". firedrake/bin/activate && python3 -m pytest -v sapphire-ice"
+- docker exec fd bash -c "source firedrake/bin/activate && python3 -m pytest -v sapphire-ice"
