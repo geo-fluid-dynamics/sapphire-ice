@@ -1,5 +1,7 @@
 ![Sapphire-Ice](https://github.com/geo-fluid-dynamics/sapphire-docs/blob/master/Sapphire-Ice-Logo.png?raw=true)
 
+![](https://travis-ci.com/geo-fluid-dynamics/sapphire-ice.svg?branch=master)
+
 Sapphire-Ice simulates fluid dynamics and heat transfer in phase-changing water and ice systems.
 
 We employ the [Sapphire](https://github.com/geo-fluid-dynamics/sapphire) engine for PDE-based simulations,
