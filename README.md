@@ -28,9 +28,11 @@ Activate the [Firedrake](https://www.firedrakeproject.org/) environment with som
 
     . ~/firedrake/bin/activate
 
+The following assumes that the Firedrake virtual environment is already activated.
+
 Test with
 
-    python3 -m pytest sapphire-ice/
+    python3 -m pytest sapphire-ice/tests/
 
 Install with
 
