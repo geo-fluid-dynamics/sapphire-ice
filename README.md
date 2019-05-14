@@ -36,7 +36,7 @@ Test with
 
 Install with
 
-    cd sapphire
+    cd sapphire-ice
     
     python3 setup.py install
     
