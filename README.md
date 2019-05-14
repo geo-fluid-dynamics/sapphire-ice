@@ -32,7 +32,7 @@ The following assumes that the Firedrake virtual environment is already activate
 
 Test with
 
-    python3 -m pytest sapphire-ice/tests/
+    python3 -m pytest -v -s sapphire-ice/tests/
 
 Install with
 
